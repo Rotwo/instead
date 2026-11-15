@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"log"
+
+	tea "charm.land/bubbletea/v2"
+	tui "github.com/Rotwo/instead/internal/tui"
 )
 
 func main() {
-	fmt.Println("Hello world!")
+	if _, err := tea.NewProgram(tui.InitialModel()).Run(); err != nil {
+		log.Fatal(err)
+	}
 }
