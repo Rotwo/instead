@@ -1,21 +1,31 @@
 package tui
 
 import (
+	"strconv"
+	"time"
+
 	tea "charm.land/bubbletea/v2"
+	core "github.com/Rotwo/instead/internal/core"
 )
 
-// needs to be moved to core
-type Tasks [10]string
-
 type Model struct {
-	tasks Tasks
+	tasks []core.Task
 }
 
 func (m Model) Init() tea.Cmd { return nil /* nil means no I/O */ }
 
 func InitialModel() Model {
 	return Model{
-		tasks: Tasks{"Task 1", "Task 2"},
+		tasks: []core.Task{
+			{
+				Title:    "Task 1",
+				Duration: time.Minute * 5,
+			},
+			{
+				Title:    "Task 2",
+				Duration: time.Minute * 10,
+			},
+		},
 	}
 }
 
@@ -43,10 +53,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // from bubbletea examples, tweaked for a simple representation
 func (m Model) View() tea.View {
 	// The header
-	s := "What should we buy at the market?\n\n"
+	s := "instead\n\n"
+
+	// Content
+	for i := 0; i < len(m.tasks); i++ {
+		var task core.Task = m.tasks[i]
+
+		s += strconv.Itoa(i) + " - " + task.Title + " - " + task.Duration.String() + "\n"
+	}
 
 	// The footer
-	s += "\nPress q to quit.\n"
+	s += "\n\nPress q to quit.\n"
 
 	// Send the UI for rendering
 	return tea.NewView(s)
